@@ -1,0 +1,54 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white"
+    android:layout_marginBottom="20dp"
+    android:elevation="2dp">
+
+    <TextView
+        android:id="@+id/textViewOrderTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Organisme Name"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#000000" />
+
+    <TextView
+        android:id="@+id/textViewOrderStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status: REALISE"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp"
+        android:textColor="#FF5722" />
+
+    <TextView
+        android:id="@+id/textViewOrderDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date Debut: 2023-01-01"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp"
+        android:textColor="#757575" />
+
+    <TextView
+        android:id="@+id/textViewOrderObjects"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Objets: Objet 1, Objet 2"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp"
+        android:textColor="#000000" />
+
+    <Button
+        android:id="@+id/buttonSettleOrdre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Settle"
+        android:layout_gravity="end"
+        android:backgroundTint="@color/primary"
+        android:textColor="@android:color/white" />
+</LinearLayout>

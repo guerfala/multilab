@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    android:gravity="center">
+
+    <Button
+        android:id="@+id/buttonAddOrder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ajouter un ordre"
+        android:background="#0000FF"
+        android:textColor="#FFFFFF"
+        android:layout_margin="10dp" />
+
+    <Button
+        android:id="@+id/buttonViewOrders"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Consulter les ordres"
+        android:background="#0000FF"
+        android:textColor="#FFFFFF"
+        android:layout_margin="10dp" />
+
+</LinearLayout>
