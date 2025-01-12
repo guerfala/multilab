@@ -49,5 +49,8 @@ public interface Api {
     @POST("objets/admin/add-objet-predifini")
     Call<ObjetPredifini> addObjetPredifini(@Body ObjetPredifini objetPredifini);
 
+    @POST("auth/addUser")
+    Call<User> addUser(@Body User user);
+
 }
 

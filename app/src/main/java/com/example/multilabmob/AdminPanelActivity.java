@@ -1,6 +1,7 @@
 package com.example.multilabmob;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,6 +48,7 @@ public class AdminPanelActivity extends AppCompatActivity {
         addObjetButton = findViewById(R.id.addObjetButton);
         fetchOrdersButton = findViewById(R.id.fetchOrdersButton);
         objetNameInput = findViewById(R.id.editTextObjetName);
+        Button addUserButton = findViewById(R.id.buttonAddUser);
 
         recyclerViewOrders.setLayoutManager(new LinearLayoutManager(this));
         adapter = new OrdreAdapter(this, orders);
@@ -67,6 +69,11 @@ public class AdminPanelActivity extends AppCompatActivity {
         fetchOrdersButton.setOnClickListener(v -> fetchOrdersByDay(selectedDateText.getText().toString()));
 
         addObjetButton.setOnClickListener(v -> addObjetPredifini(objetNameInput.getText().toString()));
+
+        addUserButton.setOnClickListener(v -> {
+            Intent intent = new Intent(AdminPanelActivity.this, AddUserActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void fetchOrdersByDay(String date) {

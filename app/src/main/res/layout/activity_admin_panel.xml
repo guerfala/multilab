@@ -41,4 +41,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Add Objet Predifini" />
+
+    <Button
+        android:id="@+id/buttonAddUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add User" />
 </LinearLayout>
