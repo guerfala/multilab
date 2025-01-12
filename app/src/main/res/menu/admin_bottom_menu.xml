@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_order"
+        android:title="Orders"
+        android:icon="@drawable/ic_orders" />
+    <item
+        android:id="@+id/menu_user"
+        android:title="Users"
+        android:icon="@drawable/ic_users" />
+    <item
+        android:id="@+id/menu_objet_predifini"
+        android:title="Objet Predifini"
+        android:icon="@drawable/ic_objet_predifini" />
+</menu>

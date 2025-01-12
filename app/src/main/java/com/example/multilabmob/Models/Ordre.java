@@ -8,6 +8,7 @@ public class Ordre {
     private String status; // Status field (REALISE or NONREALISE)
     private String dateDebut; // DateDebut field as a String for easier parsing in Android
     private List<ObjetMission> objetMissions;
+    private String username; // Add the User field for admin purposes
 
     // Getter and Setter for id
     public int getId() {
@@ -52,5 +53,13 @@ public class Ordre {
 
     public void setObjetMissions(List<ObjetMission> objetMissions) {
         this.objetMissions = objetMissions;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

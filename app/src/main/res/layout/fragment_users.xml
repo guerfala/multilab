@@ -41,7 +41,6 @@
         android:id="@+id/spinnerRole"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/roles_array"
         android:layout_marginBottom="10dp"/>
 
     <Button

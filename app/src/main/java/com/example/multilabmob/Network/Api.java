@@ -50,7 +50,8 @@ public interface Api {
     Call<ObjetPredifini> addObjetPredifini(@Body ObjetPredifini objetPredifini);
 
     @POST("auth/addUser")
-    Call<User> addUser(@Body User user);
+    Call<JsonObject> addUser(@Body User user);
+
 
 }
 

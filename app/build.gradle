@@ -35,6 +35,8 @@ dependencies {
     // Gson Converter
     implementation libs.retrofit2.converter.gson
 
+    implementation libs.google.material.v190
+
     implementation libs.appcompat
     implementation libs.material
     implementation libs.activity
