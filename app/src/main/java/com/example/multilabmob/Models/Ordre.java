@@ -7,6 +7,8 @@ public class Ordre {
     private String organisme;
     private String status; // Status field (REALISE or NONREALISE)
     private String dateDebut; // DateDebut field as a String for easier parsing in Android
+
+    private String dateFin;
     private List<ObjetMission> objetMissions;
     private String username; // Add the User field for admin purposes
 
@@ -61,5 +63,13 @@ public class Ordre {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getDateFin() {
+        return dateFin;
+    }
+
+    public void setDateFin(String dateFin) {
+        this.dateFin = dateFin;
     }
 }

@@ -28,6 +28,14 @@
         android:textSize="14sp" />
 
     <TextView
+        android:id="@+id/textViewOrderDateFin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date Fin: "
+        android:textSize="14sp"
+        android:layout_marginTop="4dp" />
+
+    <TextView
         android:id="@+id/textViewOrderUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

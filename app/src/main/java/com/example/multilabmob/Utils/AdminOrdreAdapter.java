@@ -33,7 +33,8 @@ public class AdminOrdreAdapter extends RecyclerView.Adapter<AdminOrdreAdapter.Or
 
         holder.textViewOrderTitle.setText("Order: " + ordre.getOrganisme());
         holder.textViewOrderStatus.setText("Status: " + ordre.getStatus());
-        holder.textViewOrderDate.setText("Date: " + ordre.getDateDebut());
+        holder.textViewOrderDate.setText("Date Start: " + ordre.getDateDebut());
+        holder.textViewOrderDateFin.setText("Date End: " + (ordre.getDateFin() != null ? ordre.getDateFin() : "N/A"));
         holder.textViewOrderUser.setText("User: " + ordre.getUsername());
     }
 
@@ -46,6 +47,7 @@ public class AdminOrdreAdapter extends RecyclerView.Adapter<AdminOrdreAdapter.Or
         TextView textViewOrderTitle;
         TextView textViewOrderStatus;
         TextView textViewOrderDate;
+        TextView textViewOrderDateFin;
         TextView textViewOrderUser;
 
         public OrderViewHolder(@NonNull View itemView) {
@@ -53,6 +55,7 @@ public class AdminOrdreAdapter extends RecyclerView.Adapter<AdminOrdreAdapter.Or
             textViewOrderTitle = itemView.findViewById(R.id.textViewOrderTitle);
             textViewOrderStatus = itemView.findViewById(R.id.textViewOrderStatus);
             textViewOrderDate = itemView.findViewById(R.id.textViewOrderDate);
+            textViewOrderDateFin = itemView.findViewById(R.id.textViewOrderDateFin);
             textViewOrderUser = itemView.findViewById(R.id.textViewOrderUser);
         }
     }

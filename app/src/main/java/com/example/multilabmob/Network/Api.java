@@ -5,6 +5,7 @@ import com.example.multilabmob.Models.ObjetMission;
 import com.example.multilabmob.Models.ObjetPredifini;
 import com.example.multilabmob.Models.Ordre;
 import com.example.multilabmob.Models.OrdreAdd;
+import com.example.multilabmob.Models.Organisme;
 import com.example.multilabmob.Models.User;
 import com.google.gson.JsonObject;
 
@@ -51,6 +52,9 @@ public interface Api {
 
     @POST("auth/addUser")
     Call<JsonObject> addUser(@Body User user);
+
+    @GET("/api/organismes")
+    Call<List<Organisme>> getOrganismes();
 
 
 }
