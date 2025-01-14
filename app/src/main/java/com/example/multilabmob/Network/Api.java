@@ -1,6 +1,7 @@
 package com.example.multilabmob.Network;
 
 
+import com.example.multilabmob.Models.Mission;
 import com.example.multilabmob.Models.ObjetMission;
 import com.example.multilabmob.Models.ObjetPredifini;
 import com.example.multilabmob.Models.Ordre;
@@ -10,9 +11,11 @@ import com.example.multilabmob.Models.User;
 import com.google.gson.JsonObject;
 
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
@@ -55,6 +58,18 @@ public interface Api {
 
     @GET("/api/organismes")
     Call<List<Organisme>> getOrganismes();
+
+    @GET("/api/auth/users")
+    Call<List<User>> getUsers();
+
+    @POST("/api/missions")
+    Call<Map<String, String>> addMission(@Body Mission mission);
+
+    @GET("/api/missions/filter")
+    Call<List<Mission>> getMissionsByDateAndUser(@Query("date") String date, @Query("userId") int userId);
+
+    @DELETE("missions/{id}")
+    Call<Map<String, String>> deleteMission(@Path("id") int missionId);
 
 
 }

@@ -1,0 +1,37 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/textViewMissionOrganisme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Organisme: "
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewMissionDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date: "
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/textViewMissionUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User: "
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/buttonCancelMission"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Annuler"
+        android:layout_marginTop="8dp"
+        android:textSize="14sp" />
+</LinearLayout>

@@ -1,0 +1,52 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <Spinner
+        android:id="@+id/spinnerOrganisme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp" />
+
+    <Spinner
+        android:id="@+id/spinnerUsers"
+        android:layout_width="match_parent"
+        android:layout_height="37dp"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/textViewSelectedDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Date"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/buttonSelectDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pick Date"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose Objet Missions"
+        android:layout_marginTop="10dp" />
+
+    <ListView
+        android:id="@+id/listViewObjects"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:choiceMode="multipleChoice" />
+
+    <Button
+        android:id="@+id/buttonAddMission"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Mission"
+        android:layout_marginTop="16dp" />
+</LinearLayout>

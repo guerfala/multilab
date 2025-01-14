@@ -1,6 +1,7 @@
 package com.example.multilabmob.Models;
 
 public class User {
+    private int id;
     private String username;
     private String pwd;
     private String role;
@@ -54,5 +55,18 @@ public class User {
 
     public void setPrenom(String prenom) {
         this.prenom = prenom;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return username; // Display only the username in the dropdown
     }
 }

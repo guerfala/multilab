@@ -11,4 +11,8 @@
         android:id="@+id/menu_objet_predifini"
         android:title="Objet Predifini"
         android:icon="@drawable/ic_objet_predifini" />
+    <item
+        android:id="@+id/menu_mission"
+        android:title="Missions"
+        android:icon="@drawable/ic_mission" />
 </menu>
