@@ -3,6 +3,7 @@ package com.example.multilabmob.Fragments;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,9 @@ import com.example.multilabmob.Models.User;
 import com.example.multilabmob.Network.RetrofitClient;
 import com.example.multilabmob.R;
 import com.example.multilabmob.Utils.MissionAdapter;
+import com.google.firebase.messaging.FirebaseMessaging;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -109,6 +112,8 @@ public class MissionFragment extends Fragment {
 
         // Handle the "Add Mission" button click
         buttonAddMission.setOnClickListener(v -> {
+            Log.d("MISSION_DIALOG", "✅ Add Mission button clicked!");
+
             int selectedOrganismePosition = spinnerOrganisme.getSelectedItemPosition();
             if (selectedOrganismePosition < 0) {
                 Toast.makeText(requireContext(), "Please select an Organisme", Toast.LENGTH_SHORT).show();
@@ -124,13 +129,30 @@ public class MissionFragment extends Fragment {
                 return;
             }
 
-            Mission mission = new Mission();
-            mission.setOrganisme(selectedOrganisme);
-            mission.setUser(selectedUser);
-            mission.setDate(selectedDate);
-            mission.setObjets(selectedObjetIds);
+            // ✅ Log Mission Creation
+            Log.d("MISSION_DIALOG", "Creating mission with Organisme: " + selectedOrganisme
+                    + ", User: " + selectedUser.getUsername()
+                    + ", Date: " + selectedDate
+                    + ", Objects: " + selectedObjetIds);
 
-            addMissionToServer(mission, dialog);
+            fetchUserFcmToken(selectedUser.getId(), fcmToken -> {
+                if (fcmToken == null || fcmToken.isEmpty()) {
+                    Log.e("FCM_DEBUG", "⚠️ WARNING: No FCM Token found for user " + selectedUser.getUsername());
+                    Toast.makeText(requireContext(), "Error: No FCM Token found for user", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Mission mission = new Mission();
+                mission.setOrganisme(selectedOrganisme);
+                mission.setUser(selectedUser);
+                mission.setDate(selectedDate);
+                mission.setObjets(selectedObjetIds);
+                mission.setFcmToken(fcmToken);  // ✅ Set the correct FCM token
+
+                Log.d("FCM_DEBUG", "🚀 Sending mission with FCM Token: " + fcmToken);
+                addMissionToServer(mission, dialog);
+            });
+
         });
 
         dialog.show();
@@ -223,28 +245,42 @@ public class MissionFragment extends Fragment {
     }
 
     private void addMissionToServer(Mission mission, AlertDialog dialog) {
-        RetrofitClient.getInstance().getApi().addMission(mission).enqueue(new Callback<Map<String, String>>() {
-            @Override
-            public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    String message = response.body().get("message");
-                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
-                } else {
-                    System.out.println("Debug: Server Response Error Body: " + response.errorBody());
-                    Toast.makeText(requireContext(), "Failed to add mission. Please try again.", Toast.LENGTH_SHORT).show();
-                }
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Log.e("FCM", "❌ Fetching FCM token failed", task.getException());
+                return;
             }
 
-            @Override
-            public void onFailure(Call<Map<String, String>> call, Throwable t) {
-                // Log the failure message
-                System.out.println("Debug: Failed to connect to the server. Error: " + t.getMessage());
-                t.printStackTrace();
-                Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
+            // ✅ Get the FCM token for the assigned user
+            String fcmToken = task.getResult();
+            mission.setFcmToken(fcmToken);
+
+            Log.d("MISSION_API", "🔥 Sending mission: " + mission.toString() + " to user: " + mission.getUser().getUsername());
+
+            RetrofitClient.getInstance().getApi().addMission(mission).enqueue(new Callback<Map<String, String>>() {
+                @Override
+                public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        Log.d("MISSION_API", "✅ Mission assigned successfully: " + response.body());
+
+                        String message = response.body().get("message");
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+
+                        dialog.dismiss();
+                    } else {
+                        Log.e("MISSION_API", "❌ Response error: " + response.errorBody());
+                        Toast.makeText(requireContext(), "Failed to assign mission. Try again.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Map<String, String>> call, Throwable t) {
+                    Log.e("MISSION_API", "❌ API request failed", t);
+                }
+            });
         });
     }
+
 
     private void fetchMissionsByDateAndUser(String date, int userId) {
         RetrofitClient.getInstance().getApi().getMissionsByDateAndUser(date, userId).enqueue(new Callback<List<Mission>>() {
@@ -297,5 +333,40 @@ public class MissionFragment extends Fragment {
             }
         });
     }
+
+    private void fetchUserFcmToken(int userId, FcmTokenCallback callback) {
+        Log.d("FCM_DEBUG", "Fetching FCM token for userId: " + userId);
+
+        RetrofitClient.getInstance().getApi().getUserFcmToken(userId).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    if (response.isSuccessful() && response.body() != null) {
+                        String fcmToken = response.body().string().trim();  // ✅ Read response as plain text
+                        Log.d("FCM_DEBUG", "✅ Retrieved FCM Token for userId " + userId + ": " + fcmToken);
+                        callback.onTokenReceived(fcmToken);
+                    } else {
+                        Log.e("FCM_DEBUG", "❌ Failed to retrieve FCM Token for userId " + userId);
+                        callback.onTokenReceived(null);
+                    }
+                } catch (Exception e) {
+                    Log.e("FCM_DEBUG", "❌ Exception while parsing FCM Token", e);
+                    callback.onTokenReceived(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("FCM_DEBUG", "❌ API Call Failed: " + t.getMessage());
+                callback.onTokenReceived(null);
+            }
+        });
+    }
+
+
+    interface FcmTokenCallback {
+        void onTokenReceived(String token);
+    }
+
 
 }

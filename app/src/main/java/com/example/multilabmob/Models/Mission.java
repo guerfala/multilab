@@ -8,6 +8,7 @@ public class Mission {
     private User user;
     private String date;
     private List<Integer> objets; // List of selected ObjetPredifini IDs
+    private String fcmToken;
 
     public int getId() {
         return id;
@@ -47,5 +48,13 @@ public class Mission {
 
     public void setObjets(List<Integer> objets) {
         this.objets = objets;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 }

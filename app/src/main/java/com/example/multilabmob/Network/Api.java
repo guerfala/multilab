@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -56,21 +57,29 @@ public interface Api {
     @POST("auth/addUser")
     Call<JsonObject> addUser(@Body User user);
 
-    @GET("/api/organismes")
+    @GET("organismes")
     Call<List<Organisme>> getOrganismes();
 
-    @GET("/api/auth/users")
+    @GET("auth/users")
     Call<List<User>> getUsers();
 
-    @POST("/api/missions")
+    @POST("missions")
     Call<Map<String, String>> addMission(@Body Mission mission);
 
-    @GET("/api/missions/filter")
+    @GET("missions/filter")
     Call<List<Mission>> getMissionsByDateAndUser(@Query("date") String date, @Query("userId") int userId);
 
     @DELETE("missions/{id}")
     Call<Map<String, String>> deleteMission(@Path("id") int missionId);
 
+    @POST("auth/save-fcm-token")
+    Call<String> saveFcmToken(@Query("userId") int userId, @Query("fcmToken") String fcmToken);
+
+    @GET("fcm/get-token")
+    Call<ResponseBody> getUserFcmToken(@Query("userId") int userId);
+
+    @POST("fcm/update-token")
+    Call<Void> updateUserFcmToken(@Query("userId") int userId, @Query("fcmToken") String fcmToken);
 
 }
 
