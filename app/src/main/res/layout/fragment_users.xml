@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -5,47 +6,25 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <EditText
-        android:id="@+id/editTextUsername"
+    <SearchView
+        android:id="@+id/searchViewUsers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Username"
-        android:inputType="text"
-        android:layout_marginBottom="5dp"/>
+        android:queryHint="Search by Username"
+        android:iconifiedByDefault="false"
+        android:layout_marginBottom="10dp"/>
 
-    <EditText
-        android:id="@+id/editTextPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:layout_marginBottom="5dp"/>
-
-    <EditText
-        android:id="@+id/editTextNom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Nom"
-        android:inputType="text"
-        android:layout_marginBottom="5dp" />
-
-    <EditText
-        android:id="@+id/editTextPrenom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Prenom"
-        android:inputType="text"
-        android:layout_marginBottom="5dp"/>
-
-    <Spinner
-        android:id="@+id/spinnerRole"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewUsers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"/>
 
-    <Button
-        android:id="@+id/buttonAddUser"
-        android:layout_width="match_parent"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddUser"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add User" />
+        android:src="@android:drawable/ic_input_add"
+        android:layout_gravity="end"
+        android:layout_margin="10dp"/>
 </LinearLayout>

@@ -81,5 +81,13 @@ public interface Api {
     @POST("fcm/update-token")
     Call<Void> updateUserFcmToken(@Query("userId") int userId, @Query("fcmToken") String fcmToken);
 
+    // 3️⃣ Update an existing user
+    @PUT("auth/{id}")
+    Call<JsonObject> updateUser(@Path("id") int id, @Body User user);
+
+    // 4️⃣ Delete a user
+    @DELETE("auth/{id}")
+    Call<JsonObject> deleteUser(@Path("id") int id);
+
 }
 
