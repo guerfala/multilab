@@ -19,12 +19,17 @@ import java.util.*;
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
 
     private List<User> userList;
-    private List<User> filteredList;
     private Context context;
+    private UserActionListener userActionListener; // ✅ Callback to refresh UsersFragment
 
-    public UserAdapter(List<User> userList) {
+    // Callback interface for refreshing users after deletion
+    public interface UserActionListener {
+        void onUserDeleted();
+    }
+
+    public UserAdapter(List<User> userList, UserActionListener listener) {
         this.userList = userList;
-        this.filteredList = new ArrayList<>(userList);
+        this.userActionListener = listener;
     }
 
     @NonNull
@@ -37,49 +42,59 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
-        User user = filteredList.get(position);
-
-        // ✅ Check if data is actually binding to views
-        Log.d("ADAPTER_BIND", "Binding user: " + user.getUsername());
-
+        User user = userList.get(position);
         holder.textViewUsername.setText(user.getUsername());
         holder.textViewRole.setText(user.getRole());
 
-        holder.buttonDelete.setOnClickListener(v -> deleteUser(user.getId(), position));
-        holder.buttonUpdate.setOnClickListener(v -> showUpdateUserDialog(user, position));
+        holder.buttonDelete.setOnClickListener(v -> deleteUser(user, position));
+        holder.buttonUpdate.setOnClickListener(v -> showUpdateUserDialog(user));
     }
 
     @Override
     public int getItemCount() {
-        return filteredList.size();
+        return userList.size();
     }
 
     public void filter(String query) {
-        filteredList.clear();
+        userList.clear();
         if (query.isEmpty()) {
-            filteredList.addAll(userList);
+            userList.addAll(userList);
         } else {
             for (User user : userList) {
                 if (user.getUsername().toLowerCase().contains(query.toLowerCase())) {
-                    filteredList.add(user);
+                    userList.add(user);
                 }
             }
         }
         notifyDataSetChanged();
     }
 
-    private void deleteUser(int userId, int position) {
+    // Update the list when new data is loaded
+    public void updateList(List<User> newList) {
+        userList.clear();
+        userList.addAll(newList);
+        notifyDataSetChanged();
+    }
+
+    private void deleteUser(User user, int position) {
         new AlertDialog.Builder(context)
                 .setTitle("Delete User")
                 .setMessage("Are you sure you want to delete this user?")
                 .setPositiveButton("Yes", (dialog, which) -> {
-                    RetrofitClient.getInstance().getApi().deleteUser(userId).enqueue(new Callback<JsonObject>() {
+                    RetrofitClient.getInstance().getApi().deleteUser(user.getId()).enqueue(new Callback<JsonObject>() {
                         @Override
                         public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                             if (response.isSuccessful()) {
                                 userList.remove(position);
-                                notifyDataSetChanged();
+                                notifyItemRemoved(position);
+                                notifyItemRangeChanged(position, userList.size());
+
                                 Toast.makeText(context, "User deleted successfully", Toast.LENGTH_SHORT).show();
+
+                                // 🔥 Trigger callback to refresh the list in UsersFragment
+                                if (userActionListener != null) {
+                                    userActionListener.onUserDeleted();
+                                }
                             } else {
                                 Toast.makeText(context, "Failed to delete user", Toast.LENGTH_SHORT).show();
                             }
@@ -95,13 +110,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                 .show();
     }
 
-    private void showUpdateUserDialog(User user, int position) {
+    private void showUpdateUserDialog(User user) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_add_user, null);
         builder.setView(dialogView);
 
         EditText etUsername = dialogView.findViewById(R.id.editTextUsername);
-        EditText etPassword = dialogView.findViewById(R.id.editTextPassword);
         EditText etNom = dialogView.findViewById(R.id.editTextNom);
         EditText etPrenom = dialogView.findViewById(R.id.editTextPrenom);
         Spinner spRole = dialogView.findViewById(R.id.spinnerRole);
@@ -109,6 +123,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         etUsername.setText(user.getUsername());
         etNom.setText(user.getNom());
         etPrenom.setText(user.getPrenom());
+
+        ArrayAdapter<String> roleAdapter = new ArrayAdapter<>(context,
+                android.R.layout.simple_spinner_item,
+                new String[]{"Admin", "Commercial"});
+        roleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spRole.setAdapter(roleAdapter);
+
+        int rolePosition = roleAdapter.getPosition(user.getRole());
+        spRole.setSelection(rolePosition != -1 ? rolePosition : 0);
 
         builder.setPositiveButton("Update", (dialog, which) -> {
             String updatedUsername = etUsername.getText().toString().trim();

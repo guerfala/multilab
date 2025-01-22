@@ -3,8 +3,6 @@ package com.example.multilabmob.Fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
@@ -42,8 +40,7 @@ public class UsersFragment extends Fragment {
         searchView = view.findViewById(R.id.searchViewUsers);
         fabAddUser = view.findViewById(R.id.fabAddUser);
 
-        // ✅ Ensure userAdapter is initialized with an empty list and set to RecyclerView
-        userAdapter = new UserAdapter(new ArrayList<>());
+        userAdapter = new UserAdapter(userList, this::loadUsers); // ✅ Auto-refresh after delete
         recyclerView.setAdapter(userAdapter);
 
         loadUsers(); // ✅ Load users after adapter is set
@@ -67,24 +64,16 @@ public class UsersFragment extends Fragment {
         return view;
     }
 
-    private void loadUsers() {
+    // ✅ Load users from API and refresh RecyclerView
+    public void loadUsers() {
         RetrofitClient.getInstance().getApi().getUsers().enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     userList.clear();
                     userList.addAll(response.body());
-
-                    Log.d("API_SUCCESS", "Users loaded: " + userList.size());
-
-                    // ✅ Ensure adapter updates properly
-                    requireActivity().runOnUiThread(() -> {
-                        userAdapter = new UserAdapter(userList); // Re-initialize adapter with new data
-                        recyclerView.setAdapter(userAdapter); // Reset RecyclerView adapter
-                        userAdapter.notifyDataSetChanged(); // Notify changes
-                    });
+                    userAdapter.notifyDataSetChanged();
                 } else {
-                    Log.e("API_ERROR", "Response Code: " + response.code());
                     Toast.makeText(requireContext(), "Failed to load users", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -97,6 +86,7 @@ public class UsersFragment extends Fragment {
         });
     }
 
+    // ✅ Show Add User Dialog
     private void showAddUserDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_user, null);
@@ -108,10 +98,10 @@ public class UsersFragment extends Fragment {
         EditText etPrenom = dialogView.findViewById(R.id.editTextPrenom);
         Spinner spRole = dialogView.findViewById(R.id.spinnerRole);
 
-        // ✅ Populate the Spinner with Admin & Commercial options
+        // ✅ Populate the Spinner with roles
         ArrayAdapter<String> roleAdapter = new ArrayAdapter<>(requireContext(),
                 android.R.layout.simple_spinner_item,
-                new String[]{"Admin", "Commercial"}); // List of roles
+                new String[]{"Admin", "Commercial"});
         roleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spRole.setAdapter(roleAdapter);
 
@@ -120,7 +110,7 @@ public class UsersFragment extends Fragment {
             String password = etPassword.getText().toString().trim();
             String nom = etNom.getText().toString().trim();
             String prenom = etPrenom.getText().toString().trim();
-            String role = spRole.getSelectedItem().toString(); // ✅ Get selected role
+            String role = spRole.getSelectedItem().toString();
 
             if (username.isEmpty() || password.isEmpty() || nom.isEmpty() || prenom.isEmpty()) {
                 Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
@@ -132,14 +122,14 @@ public class UsersFragment extends Fragment {
             newUser.setPwd(password);
             newUser.setNom(nom);
             newUser.setPrenom(prenom);
-            newUser.setRole(role); // ✅ Save selected role
+            newUser.setRole(role);
 
             RetrofitClient.getInstance().getApi().addUser(newUser).enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     if (response.isSuccessful()) {
                         Toast.makeText(requireContext(), "User added successfully", Toast.LENGTH_SHORT).show();
-                        loadUsers();
+                        loadUsers(); // ✅ Refresh list after adding
                     } else {
                         Toast.makeText(requireContext(), "Failed to add user", Toast.LENGTH_SHORT).show();
                     }
