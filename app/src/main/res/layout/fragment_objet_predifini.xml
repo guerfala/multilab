@@ -5,16 +5,26 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <EditText
-        android:id="@+id/editTextObjetName"
+    <SearchView
+        android:id="@+id/searchViewObjets"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Objet Name"
-        android:inputType="text" />
+        android:queryHint="Search Objet"
+        android:iconifiedByDefault="false"
+        android:layout_marginBottom="10dp"/>
 
-    <Button
-        android:id="@+id/buttonAddObjet"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewObjets"
         android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginBottom="10dp"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddObjet"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Objet Predifini" />
+        android:src="@android:drawable/ic_input_add"
+        android:layout_gravity="end"
+        android:layout_margin="10dp"/>
 </LinearLayout>

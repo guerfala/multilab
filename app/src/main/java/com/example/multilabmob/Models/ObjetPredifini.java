@@ -4,6 +4,14 @@ public class ObjetPredifini {
     private int id;
     private String nom;
 
+    public ObjetPredifini() {
+    }
+
+    public ObjetPredifini(int id, String nom) {
+        this.id = id;
+        this.nom = nom;
+    }
+
     public int getId() {
         return id;
     }

@@ -28,6 +28,15 @@ public interface Api {
     @GET("objets")
     Call<List<ObjetPredifini>> getObjets();
 
+    @POST("objets/admin/add-objet-predifini")
+    Call<ObjetPredifini> addObjetPredifini(@Body ObjetPredifini objetPredifini);
+
+    @PUT("objets/{id}")
+    Call<ObjetPredifini> updateObjetPredifini(@Path("id") int id, @Body ObjetPredifini objetPredifini);
+
+    @DELETE("objets/{id}")
+    Call<Void> deleteObjetPredifini(@Path("id") int id);
+
     @GET("ordres")
     Call<List<Ordre>> getOrders(@Header("user-id") int userId);
 
@@ -50,9 +59,6 @@ public interface Api {
 
     @GET("ordres/admin/orders-by-day")
     Call<List<Ordre>> getOrdersByDayForAdmin(@Query("date") String date);
-
-    @POST("objets/admin/add-objet-predifini")
-    Call<ObjetPredifini> addObjetPredifini(@Body ObjetPredifini objetPredifini);
 
     @POST("auth/addUser")
     Call<JsonObject> addUser(@Body User user);
