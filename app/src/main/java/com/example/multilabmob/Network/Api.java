@@ -50,8 +50,8 @@ public interface Api {
     Call<Void> settleOrdre(@Path("ordreId") int ordreId, @Body List<ObjetMission> objetMissions);
 
 
-    @POST("ordres")
-    Call<OrdreAdd> createOrdre(@Body OrdreAdd ordreAdd, @Header("user-id") int userId);
+    @POST("ordres/create")
+    Call<Void> createOrdre(@Body OrdreAdd ordreAddDTO);
 
 
     @POST("auth/login")

@@ -47,6 +47,7 @@ public class MissionAdapterUser extends RecyclerView.Adapter<MissionAdapterUser.
             intent.putExtra("date", mission.getDate());
             intent.putIntegerArrayListExtra("objets", new ArrayList<>(mission.getObjets()));
             intent.putExtra("userId", userId);
+            intent.putExtra("missionId", mission.getId());
             context.startActivity(intent);
         });
     }

@@ -3,16 +3,20 @@ package com.example.multilabmob.Models;
 import java.util.List;
 
 public class OrdreAdd {
-    private String organisme; // Name of the organism
-    private List<Integer> objetsIds; // List of selected object IDs
+    private int id;
+    private String organisme;
+    private int missionId;
+    private int userId;
+    private List<Integer> objetMissionIds;
 
-    // Constructor
-    public OrdreAdd(String organisme, List<Integer> objetsIds) {
-        this.organisme = organisme;
-        this.objetsIds = objetsIds;
+    public int getId() {
+        return id;
     }
 
-    // Getters and Setters
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getOrganisme() {
         return organisme;
     }
@@ -21,11 +25,29 @@ public class OrdreAdd {
         this.organisme = organisme;
     }
 
-    public List<Integer> getObjetsIds() {
-        return objetsIds;
+    public int getMissionId() {
+        return missionId;
     }
 
-    public void setObjetsIds(List<Integer> objetsIds) {
-        this.objetsIds = objetsIds;
+    public void setMissionId(int missionId) {
+        this.missionId = missionId;
     }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public List<Integer> getObjetMissionIds() {
+        return objetMissionIds;
+    }
+
+    public void setObjetMissionIds(List<Integer> objetMissionIds) {
+        this.objetMissionIds = objetMissionIds;
+    }
+
+    // Getters and Setters
 }

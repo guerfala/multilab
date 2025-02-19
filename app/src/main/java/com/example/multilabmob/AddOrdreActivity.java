@@ -1,14 +1,18 @@
 package com.example.multilabmob;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.multilabmob.Models.OrdreAdd;
 import com.example.multilabmob.Models.Organisme;
 import com.example.multilabmob.Models.ObjetPredifini;
 import com.example.multilabmob.Network.RetrofitClient;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,6 +32,7 @@ public class AddOrdreActivity extends AppCompatActivity {
     private String missionDate;
     private ArrayList<Integer> missionObjetIds;
     private int userId;
+    private int missionId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,7 @@ public class AddOrdreActivity extends AppCompatActivity {
         missionDate = getIntent().getStringExtra("date");
         missionObjetIds = getIntent().getIntegerArrayListExtra("objets");
         userId = getIntent().getIntExtra("userId", -1);
+        missionId = getIntent().getIntExtra("missionId", -1);
 
         fetchOrganismes();
         fetchObjets();
@@ -53,8 +59,7 @@ public class AddOrdreActivity extends AppCompatActivity {
                 return;
             }
 
-            OrdreAdd ordreAdd = new OrdreAdd(organismeName, selectedObjetIds);
-            saveOrder(ordreAdd, userId);
+            saveOrder();
         });
     }
 
@@ -146,21 +151,40 @@ public class AddOrdreActivity extends AppCompatActivity {
         }
     }
 
-    private void saveOrder(OrdreAdd ordreAdd, int userId) {
-        RetrofitClient.getInstance().getApi().createOrdre(ordreAdd, userId).enqueue(new Callback<OrdreAdd>() {
+    private void saveOrder() {
+        if (missionId == -1 || userId == -1) {
+            Toast.makeText(this, "Mission ou utilisateur non trouvé", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // ✅ Create an OrdreAdd object with the selected organism and objects
+        OrdreAdd ordreAdd = new OrdreAdd();
+        ordreAdd.setOrganisme(organismeName);
+        ordreAdd.setMissionId(missionId);
+        ordreAdd.setUserId(userId);
+        ordreAdd.setObjetMissionIds(selectedObjetIds);
+
+        // ✅ Make the API call to create the ordre with the linked mission and user
+        RetrofitClient.getInstance().getApi().createOrdre(ordreAdd).enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<OrdreAdd> call, Response<OrdreAdd> response) {
+            public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(AddOrdreActivity.this, "Ordre ajouté avec succès", Toast.LENGTH_SHORT).show();
-                    finish();
+                    Toast.makeText(AddOrdreActivity.this, "Ordre created successfully", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(AddOrdreActivity.this, ShowMissionsActivity.class);
+                    intent.putExtra("userId", userId); // Pass missionId if ShowMissionActivity uses it
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish(); // Close AddOrdreActivity after redirection
                 } else {
-                    Toast.makeText(AddOrdreActivity.this, "Erreur lors de l'ajout", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddOrdreActivity.this, "Failed to create ordre", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<OrdreAdd> call, Throwable t) {
-                Toast.makeText(AddOrdreActivity.this, "Échec de la connexion", Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("API_ERROR", t.getMessage(), t);
+                Toast.makeText(AddOrdreActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
