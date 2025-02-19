@@ -6,10 +6,10 @@
     android:gravity="center">
 
     <Button
-        android:id="@+id/buttonAddOrder"
+        android:id="@+id/buttonViewMissions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ajouter un ordre"
+        android:text="Consulter mes missions"
         android:background="#0000FF"
         android:textColor="#FFFFFF"
         android:layout_margin="10dp" />

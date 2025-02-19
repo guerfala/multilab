@@ -95,5 +95,9 @@ public interface Api {
     @DELETE("auth/{id}")
     Call<JsonObject> deleteUser(@Path("id") int id);
 
+    // ✅ Add the missing method to fetch missions assigned to a user
+    @GET("missions/user/{userId}")
+    Call<List<Mission>> getMissionsByUser(@Path("userId") int userId);
+
 }
 

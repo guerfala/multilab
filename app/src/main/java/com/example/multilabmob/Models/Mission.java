@@ -1,14 +1,23 @@
 package com.example.multilabmob.Models;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class Mission {
+public class Mission implements Serializable {
     private int id;
     private String organisme;
     private User user;
     private String date;
     private List<Integer> objets; // List of selected ObjetPredifini IDs
     private String fcmToken;
+
+    public <E> Mission(int i, String missionAlpha, Object o, String date, ArrayList<E> es, String s) {
+    }
+
+    public Mission() {
+
+    }
 
     public int getId() {
         return id;
@@ -57,4 +66,10 @@ public class Mission {
     public void setFcmToken(String fcmToken) {
         this.fcmToken = fcmToken;
     }
+
+    @Override
+    public String toString() {
+        return "Mission: " + organisme + " on " + date;
+    }
+
 }

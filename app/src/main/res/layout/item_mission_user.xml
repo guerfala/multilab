@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:background="@android:color/white"
+    android:elevation="2dp"
+    android:layout_margin="8dp">
+
+    <TextView
+        android:id="@+id/missionNameUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mission Name"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="4dp" />
+
+    <TextView
+        android:id="@+id/missionDateUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date"
+        android:textSize="16sp"
+        android:padding="4dp" />
+
+    <Button
+        android:id="@+id/startMissionButtonUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Commencer"
+        android:backgroundTint="@android:color/holo_blue_dark"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="8dp"/>
+</LinearLayout>

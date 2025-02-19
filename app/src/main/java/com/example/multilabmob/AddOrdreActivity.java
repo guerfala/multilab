@@ -7,10 +7,8 @@ import com.example.multilabmob.Models.OrdreAdd;
 import com.example.multilabmob.Models.Organisme;
 import com.example.multilabmob.Models.ObjetPredifini;
 import com.example.multilabmob.Network.RetrofitClient;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,6 +24,11 @@ public class AddOrdreActivity extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
     private List<Integer> selectedObjetIds = new ArrayList<>();
 
+    private String organismeName;
+    private String missionDate;
+    private ArrayList<Integer> missionObjetIds;
+    private int userId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,20 +38,22 @@ public class AddOrdreActivity extends AppCompatActivity {
         listViewObjects = findViewById(R.id.listViewObjects);
         buttonSaveOrder = findViewById(R.id.buttonSaveOrder);
 
-        fetchOrganismes(); // Load Organismes dynamically
-        fetchObjets(); // Load ObjetPredifini dynamically
+        // ✅ Retrieve data from Intent
+        organismeName = getIntent().getStringExtra("organisme");
+        missionDate = getIntent().getStringExtra("date");
+        missionObjetIds = getIntent().getIntegerArrayListExtra("objets");
+        userId = getIntent().getIntExtra("userId", -1);
 
-        int userId = getIntent().getIntExtra("userId", -1);
+        fetchOrganismes();
+        fetchObjets();
 
         buttonSaveOrder.setOnClickListener(v -> {
-            Organisme selectedOrganisme = (Organisme) spinnerOrganisme.getSelectedItem();
-
-            if (selectedOrganisme == null || selectedObjetIds.isEmpty()) {
-                Toast.makeText(AddOrdreActivity.this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show();
+            if (selectedObjetIds.isEmpty()) {
+                Toast.makeText(this, "Veuillez sélectionner des objets", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            OrdreAdd ordreAdd = new OrdreAdd(selectedOrganisme.getLibelle(), selectedObjetIds);
+            OrdreAdd ordreAdd = new OrdreAdd(organismeName, selectedObjetIds);
             saveOrder(ordreAdd, userId);
         });
     }
@@ -60,12 +65,17 @@ public class AddOrdreActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     organismesList = response.body();
 
-                    ArrayAdapter<Organisme> spinnerAdapter = new ArrayAdapter<>(AddOrdreActivity.this,
-                            android.R.layout.simple_spinner_item, organismesList);
+                    ArrayAdapter<Organisme> spinnerAdapter = new ArrayAdapter<>(
+                            AddOrdreActivity.this,
+                            android.R.layout.simple_spinner_item,
+                            organismesList
+                    );
                     spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerOrganisme.setAdapter(spinnerAdapter);
+
+                    autoSelectOrganisme();
                 } else {
-                    Toast.makeText(AddOrdreActivity.this, "Erreur lors du chargement des organismes", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddOrdreActivity.this, "Erreur de chargement des organismes", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -88,24 +98,52 @@ public class AddOrdreActivity extends AppCompatActivity {
                         objetNames.add(objet.getNom());
                     }
 
-                    adapter = new ArrayAdapter<>(AddOrdreActivity.this, android.R.layout.simple_list_item_multiple_choice, objetNames);
+                    adapter = new ArrayAdapter<>(AddOrdreActivity.this,
+                            android.R.layout.simple_list_item_multiple_choice, objetNames);
                     listViewObjects.setAdapter(adapter);
 
                     listViewObjects.setOnItemClickListener((parent, view, position, id) -> {
+                        int objetId = objetsList.get(position).getId();
                         if (listViewObjects.isItemChecked(position)) {
-                            selectedObjetIds.add(objetsList.get(position).getId());
+                            if (!selectedObjetIds.contains(objetId)) {
+                                selectedObjetIds.add(objetId);
+                            }
                         } else {
-                            selectedObjetIds.remove((Integer) objetsList.get(position).getId());
+                            selectedObjetIds.remove((Integer) objetId);
                         }
                     });
+
+                    autoSelectObjects();
+                } else {
+                    Toast.makeText(AddOrdreActivity.this, "Erreur de chargement des objets", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<ObjetPredifini>> call, Throwable t) {
-                Toast.makeText(AddOrdreActivity.this, "Erreur de récupération des objets", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddOrdreActivity.this, "Échec de la connexion", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void autoSelectOrganisme() {
+        for (int i = 0; i < organismesList.size(); i++) {
+            if (organismesList.get(i).getLibelle().equalsIgnoreCase(organismeName)) {
+                spinnerOrganisme.setSelection(i);
+                break;
+            }
+        }
+    }
+
+    private void autoSelectObjects() {
+        for (int i = 0; i < objetsList.size(); i++) {
+            if (missionObjetIds != null && missionObjetIds.contains(objetsList.get(i).getId())) {
+                listViewObjects.setItemChecked(i, true);
+                if (!selectedObjetIds.contains(objetsList.get(i).getId())) {
+                    selectedObjetIds.add(objetsList.get(i).getId());
+                }
+            }
+        }
     }
 
     private void saveOrder(OrdreAdd ordreAdd, int userId) {

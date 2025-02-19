@@ -26,16 +26,13 @@ public class MainActivity extends AppCompatActivity {
         // Retrieve the userId from the Intent that started MainActivity
         int userId = getIntent().getIntExtra("userId", -1);
 
-        Button addOrderButton = findViewById(R.id.buttonAddOrder);
+        Button viewMissionsButton = findViewById(R.id.buttonViewMissions);
         Button viewOrdersButton = findViewById(R.id.buttonViewOrders);
 
-        addOrderButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddOrdreActivity.class);
-                intent.putExtra("userId", userId);
-                startActivity(intent);
-            }
+        viewMissionsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ShowMissionsActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
         });
 
         viewOrdersButton.setOnClickListener(new View.OnClickListener() {
