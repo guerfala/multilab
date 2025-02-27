@@ -49,10 +49,8 @@ public interface Api {
     @POST("ordres/{ordreId}/settle")
     Call<Void> settleOrdre(@Path("ordreId") int ordreId, @Body List<ObjetMission> objetMissions);
 
-
     @POST("ordres/create")
     Call<Void> createOrdre(@Body OrdreAdd ordreAddDTO);
-
 
     @POST("auth/login")
     Call<JsonObject> login(@Body User user);
@@ -98,6 +96,16 @@ public interface Api {
     // ✅ Add the missing method to fetch missions assigned to a user
     @GET("missions/user/{userId}")
     Call<List<Mission>> getMissionsByUser(@Path("userId") int userId);
+
+    @POST("kilometers/start")
+    Call<Void> submitStartKilometers(@Query("userId") int userId, @Query("kilometers") float kilometers);
+
+    @GET("kilometers/byUserAndDate")
+    Call<Float> getKilometrageByUserAndDate(
+            @Query("userId") int userId,
+            @Query("date") String date
+    );
+
 
 }
 

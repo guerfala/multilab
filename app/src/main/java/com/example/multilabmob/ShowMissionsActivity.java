@@ -16,6 +16,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import android.widget.Button;
+import android.widget.EditText;
 
 public class ShowMissionsActivity extends AppCompatActivity {
 
@@ -43,6 +45,20 @@ public class ShowMissionsActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "User ID is missing!", Toast.LENGTH_SHORT).show();
         }
+
+        EditText kilometerEditText = findViewById(R.id.kilometerEditText);
+        Button submitKilometersButton = findViewById(R.id.submitKilometersButton);
+
+        submitKilometersButton.setOnClickListener(v -> {
+            String kilometersInput = kilometerEditText.getText().toString().trim();
+
+            if (kilometersInput.isEmpty()) {
+                Toast.makeText(this, "Veuillez entrer le kilométrage.", Toast.LENGTH_SHORT).show();
+            } else {
+                float kilometers = Float.parseFloat(kilometersInput);  // ✅ Correct way to parse float values
+                submitKilometers(userId, kilometers);
+            }
+        });
     }
 
     private void fetchMissions(int userId) {
@@ -74,4 +90,27 @@ public class ShowMissionsActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void submitKilometers(int userId, float kilometers) {
+        progressBar.setVisibility(View.VISIBLE);
+
+        RetrofitClient.getInstance().getApi().submitStartKilometers(userId, kilometers).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                progressBar.setVisibility(View.GONE);
+                if (response.isSuccessful()) {
+                    Toast.makeText(ShowMissionsActivity.this, "Kilométrage enregistré avec succès!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ShowMissionsActivity.this, "Erreur lors de l'enregistrement.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(ShowMissionsActivity.this, "Erreur: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
 }

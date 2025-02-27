@@ -42,6 +42,7 @@ public class MissionFragment extends Fragment {
     private RecyclerView recyclerViewMissions;
     private MissionAdapter missionAdapter; // Assumes you have a MissionAdapter for the RecyclerView
     private List<Mission> missions = new ArrayList<>();
+    private TextView textViewKilometrage;
 
     @Nullable
     @Override
@@ -54,6 +55,8 @@ public class MissionFragment extends Fragment {
         textViewSelectedDateFilter = view.findViewById(R.id.textViewSelectedDateFilter);
         spinnerUserFilter = view.findViewById(R.id.spinnerUserFilter);
         recyclerViewMissions = view.findViewById(R.id.recyclerViewMissions);
+
+        textViewKilometrage = view.findViewById(R.id.textViewKilometrage);
 
         // Setup RecyclerView
         recyclerViewMissions.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -77,6 +80,7 @@ public class MissionFragment extends Fragment {
                 return;
             }
             fetchMissionsByDateAndUser(selectedDate, selectedUser.getId());
+            fetchKilometrageByDateAndUser(selectedDate, selectedUser.getId());
         });
 
         return view;
@@ -332,6 +336,26 @@ public class MissionFragment extends Fragment {
                 Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void fetchKilometrageByDateAndUser(String date, int userId) {
+        RetrofitClient.getInstance().getApi().getKilometrageByUserAndDate(userId, date)
+                .enqueue(new Callback<Float>() {
+                    @Override
+                    public void onResponse(Call<Float> call, Response<Float> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            float kilometrage = response.body();
+                            textViewKilometrage.setText("Kilometrage: " + kilometrage + " km");
+                        } else {
+                            textViewKilometrage.setText("Kilometrage: No data");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Float> call, Throwable t) {
+                        textViewKilometrage.setText("Error fetching kilometrage");
+                    }
+                });
     }
 
     private void fetchUserFcmToken(int userId, FcmTokenCallback callback) {

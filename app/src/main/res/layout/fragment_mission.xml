@@ -47,6 +47,15 @@
         android:layout_marginTop="8dp"
         android:text="Filter Missions" />
 
+    <TextView
+        android:id="@+id/textViewKilometrage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Kilometrage: 0 km"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMissions"
         android:layout_width="match_parent"
