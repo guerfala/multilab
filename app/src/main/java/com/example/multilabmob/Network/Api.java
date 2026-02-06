@@ -3,6 +3,7 @@ package com.example.multilabmob.Network;
 
 import com.example.multilabmob.Models.Mission;
 import com.example.multilabmob.Models.ObjetMission;
+import com.example.multilabmob.Models.ObjetMissionUpdateDTO;
 import com.example.multilabmob.Models.ObjetPredifini;
 import com.example.multilabmob.Models.Ordre;
 import com.example.multilabmob.Models.OrdreAdd;
@@ -47,7 +48,7 @@ public interface Api {
     Call<List<ObjetMission>> getObjetMissions(@Path("ordreId") int ordreId);
 
     @POST("ordres/{ordreId}/settle")
-    Call<Void> settleOrdre(@Path("ordreId") int ordreId, @Body List<ObjetMission> objetMissions);
+    Call<Void> settleOrdre(@Path("ordreId") int ordreId, @Body List<ObjetMissionUpdateDTO> updatedMissions);
 
     @POST("ordres/create")
     Call<Void> createOrdre(@Body OrdreAdd ordreAddDTO);
@@ -64,6 +65,15 @@ public interface Api {
     @GET("organismes")
     Call<List<Organisme>> getOrganismes();
 
+    @POST("organismes")
+    Call<JsonObject> addOrganisme(@Body Organisme organisme);
+
+    @PUT("organismes/{id}")
+    Call<JsonObject> updateOrganisme(@Path("id") int id, @Body Organisme organisme);
+
+    @DELETE("organismes/{id}")
+    Call<JsonObject> deleteOrganisme(@Path("id") int id);
+
     @GET("auth/users")
     Call<List<User>> getUsers();
 
@@ -75,15 +85,6 @@ public interface Api {
 
     @DELETE("missions/{id}")
     Call<Map<String, String>> deleteMission(@Path("id") int missionId);
-
-    @POST("auth/save-fcm-token")
-    Call<String> saveFcmToken(@Query("userId") int userId, @Query("fcmToken") String fcmToken);
-
-    @GET("fcm/get-token")
-    Call<ResponseBody> getUserFcmToken(@Query("userId") int userId);
-
-    @POST("fcm/update-token")
-    Call<Void> updateUserFcmToken(@Query("userId") int userId, @Query("fcmToken") String fcmToken);
 
     // 3️⃣ Update an existing user
     @PUT("auth/{id}")
@@ -105,6 +106,9 @@ public interface Api {
             @Query("userId") int userId,
             @Query("date") String date
     );
+
+    @GET("ordres/stats/{userId}")
+    Call<JsonObject> getOrderStatsForUser(@Path("userId") int userId);
 
 
 }

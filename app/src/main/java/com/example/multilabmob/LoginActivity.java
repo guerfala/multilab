@@ -5,18 +5,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import com.example.multilabmob.Models.User;
 import com.example.multilabmob.Network.RetrofitClient;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.JsonObject;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -77,9 +74,6 @@ public class LoginActivity extends AppCompatActivity {
 
                                 Toast.makeText(LoginActivity.this, "Bienvenue " + nom + " " + prenom, Toast.LENGTH_SHORT).show();
 
-                                // ✅ Save FCM Token for Logged-in User
-                                saveUserFcmToken(userId);
-
                                 if ("admin".equalsIgnoreCase(role)) {
                                     Intent intent = new Intent(LoginActivity.this, AdminPanelActivity.class);
                                     startActivity(intent);
@@ -119,34 +113,5 @@ public class LoginActivity extends AppCompatActivity {
             Log.d(TAG, "📢 Requesting Notification Permission...");
             requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
         }
-    }
-
-    // ✅ Save FCM Token to Server for the Logged-in User
-    private void saveUserFcmToken(int userId) {
-        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) {
-                Log.e("FCM", "❌ Failed to get FCM Token", task.getException());
-                return;
-            }
-
-            String fcmToken = task.getResult();
-            Log.d("FCM", "✅ User " + userId + " FCM Token: " + fcmToken);
-
-            RetrofitClient.getInstance().getApi().updateUserFcmToken(userId, fcmToken).enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    if (response.isSuccessful()) {
-                        Log.d("FCM", "✅ FCM Token saved successfully for User " + userId);
-                    } else {
-                        Log.e("FCM", "❌ Failed to save FCM Token for User " + userId);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    Log.e("FCM", "❌ API request failed while saving FCM Token", t);
-                }
-            });
-        });
     }
 }

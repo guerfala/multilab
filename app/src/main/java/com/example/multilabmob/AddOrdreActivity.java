@@ -41,6 +41,7 @@ public class AddOrdreActivity extends AppCompatActivity {
 
         spinnerOrganisme = findViewById(R.id.spinnerOrganisme);
         listViewObjects = findViewById(R.id.listViewObjects);
+        listViewObjects.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         buttonSaveOrder = findViewById(R.id.buttonSaveOrder);
 
         // ✅ Retrieve data from Intent
@@ -58,10 +59,10 @@ public class AddOrdreActivity extends AppCompatActivity {
                 Toast.makeText(this, "Veuillez sélectionner des objets", Toast.LENGTH_SHORT).show();
                 return;
             }
-
             saveOrder();
         });
     }
+
 
     private void fetchOrganismes() {
         RetrofitClient.getInstance().getApi().getOrganismes().enqueue(new Callback<List<Organisme>>() {
@@ -97,7 +98,6 @@ public class AddOrdreActivity extends AppCompatActivity {
             public void onResponse(Call<List<ObjetPredifini>> call, Response<List<ObjetPredifini>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     objetsList = response.body();
-
                     List<String> objetNames = new ArrayList<>();
                     for (ObjetPredifini objet : objetsList) {
                         objetNames.add(objet.getNom());
@@ -107,26 +107,33 @@ public class AddOrdreActivity extends AppCompatActivity {
                             android.R.layout.simple_list_item_multiple_choice, objetNames);
                     listViewObjects.setAdapter(adapter);
 
+                    // Add the item click listener here
                     listViewObjects.setOnItemClickListener((parent, view, position, id) -> {
-                        int objetId = objetsList.get(position).getId();
-                        if (listViewObjects.isItemChecked(position)) {
-                            if (!selectedObjetIds.contains(objetId)) {
-                                selectedObjetIds.add(objetId);
+                        ObjetPredifini objet = objetsList.get(position);
+                        boolean isChecked = listViewObjects.isItemChecked(position);
+
+                        Log.d("OBJECT_DEBUG", "Clicked " + objet.getNom() + " (ID: " + objet.getId() +
+                                "), checked: " + isChecked);
+
+                        if (isChecked) {
+                            if (!selectedObjetIds.contains(objet.getId())) {
+                                selectedObjetIds.add(objet.getId());
                             }
                         } else {
-                            selectedObjetIds.remove((Integer) objetId);
+                            selectedObjetIds.remove(Integer.valueOf(objet.getId()));
                         }
+
+                        Log.d("OBJECT_DEBUG", "After click, selectedObjetIds: " + selectedObjetIds);
                     });
 
+                    // ✅ Auto-select objects from the mission
                     autoSelectObjects();
-                } else {
-                    Toast.makeText(AddOrdreActivity.this, "Erreur de chargement des objets", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<ObjetPredifini>> call, Throwable t) {
-                Toast.makeText(AddOrdreActivity.this, "Échec de la connexion", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddOrdreActivity.this, "Erreur de chargement des objets", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -141,14 +148,41 @@ public class AddOrdreActivity extends AppCompatActivity {
     }
 
     private void autoSelectObjects() {
+        // First clear everything
+        listViewObjects.clearChoices();
+        selectedObjetIds.clear();
+
+        Log.d("OBJECT_DEBUG", "Mission object IDs: " + (missionObjetIds != null ? missionObjetIds.toString() : "null"));
+
+        if (missionObjetIds == null || missionObjetIds.isEmpty()) {
+            // If no mission objects, make sure nothing is selected
+            for (int i = 0; i < objetsList.size(); i++) {
+                listViewObjects.setItemChecked(i, false);
+            }
+            adapter.notifyDataSetChanged();
+            return;
+        }
+
+        // Loop through all objects and check only those in the mission
         for (int i = 0; i < objetsList.size(); i++) {
-            if (missionObjetIds != null && missionObjetIds.contains(objetsList.get(i).getId())) {
-                listViewObjects.setItemChecked(i, true);
-                if (!selectedObjetIds.contains(objetsList.get(i).getId())) {
-                    selectedObjetIds.add(objetsList.get(i).getId());
+            ObjetPredifini objet = objetsList.get(i);
+            boolean shouldBeSelected = missionObjetIds.contains(objet.getId());
+
+            listViewObjects.setItemChecked(i, shouldBeSelected);
+
+            // Also update our tracking list to match UI state
+            if (shouldBeSelected) {
+                if (!selectedObjetIds.contains(objet.getId())) {
+                    selectedObjetIds.add(objet.getId());
                 }
             }
+
+            Log.d("OBJECT_DEBUG", "Object at position " + i + ": ID=" + objet.getId() +
+                    ", Name=" + objet.getNom() + ", Selected=" + shouldBeSelected);
         }
+
+        Log.d("OBJECT_DEBUG", "After auto-selection, selectedObjetIds: " + selectedObjetIds);
+        adapter.notifyDataSetChanged();
     }
 
     private void saveOrder() {

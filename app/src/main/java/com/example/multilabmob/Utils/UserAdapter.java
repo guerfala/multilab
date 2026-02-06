@@ -19,6 +19,8 @@ import java.util.*;
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
 
     private List<User> userList;
+    private List<User> userListFull;
+
     private Context context;
     private UserActionListener userActionListener; // ✅ Callback to refresh UsersFragment
 
@@ -29,6 +31,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     public UserAdapter(List<User> userList, UserActionListener listener) {
         this.userList = userList;
+        this.userListFull = new ArrayList<>(userList);
         this.userActionListener = listener;
     }
 
@@ -48,6 +51,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
         holder.buttonDelete.setOnClickListener(v -> deleteUser(user, position));
         holder.buttonUpdate.setOnClickListener(v -> showUpdateUserDialog(user));
+        holder.buttonStats.setOnClickListener(v -> showStats(user));
     }
 
     @Override
@@ -56,23 +60,28 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     }
 
     public void filter(String query) {
-        userList.clear();
+        userList.clear(); // Clear the displayed list
+
         if (query.isEmpty()) {
-            userList.addAll(userList);
+            // If search query is empty, show the entire list
+            userList.addAll(userListFull);
         } else {
-            for (User user : userList) {
+            // Otherwise, loop through the backup list
+            for (User user : userListFull) {
                 if (user.getUsername().toLowerCase().contains(query.toLowerCase())) {
                     userList.add(user);
                 }
             }
         }
+
         notifyDataSetChanged();
     }
 
-    // Update the list when new data is loaded
     public void updateList(List<User> newList) {
         userList.clear();
+        userListFull.clear();
         userList.addAll(newList);
+        userListFull.addAll(newList);
         notifyDataSetChanged();
     }
 
@@ -166,9 +175,40 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         builder.create().show();
     }
 
+    private void showStats(User user) {
+        RetrofitClient.getInstance().getApi().getOrderStatsForUser(user.getId()).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    JsonObject stats = response.body();
+                    // Build a message using stats. Default to zero if a key is missing.
+                    int realise = stats.has("REALISE") ? stats.get("REALISE").getAsInt() : 0;
+                    int nonRealise = stats.has("NONREALISE") ? stats.get("NONREALISE").getAsInt() : 0;
+                    int enCours = stats.has("ENCOURS") ? stats.get("ENCOURS").getAsInt() : 0;
+
+                    String message = "REALISE: " + realise + "\n"
+                            + "NONREALISE: " + nonRealise + "\n"
+                            + "ENCOURS: " + enCours;
+
+                    new AlertDialog.Builder(context)
+                            .setTitle("Order Stats for " + user.getUsername())
+                            .setMessage(message)
+                            .setPositiveButton("OK", null)
+                            .show();
+                } else {
+                    Toast.makeText(context, "Failed to retrieve stats", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     public static class UserViewHolder extends RecyclerView.ViewHolder {
         TextView textViewUsername, textViewRole;
-        Button buttonDelete, buttonUpdate;
+        Button buttonStats, buttonDelete, buttonUpdate;
 
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -176,6 +216,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             textViewRole = itemView.findViewById(R.id.textViewRole);
             buttonDelete = itemView.findViewById(R.id.buttonDelete);
             buttonUpdate = itemView.findViewById(R.id.buttonUpdate);
+            buttonStats = itemView.findViewById(R.id.buttonStats);
         }
     }
 }

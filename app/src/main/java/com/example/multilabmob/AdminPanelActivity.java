@@ -1,7 +1,6 @@
 package com.example.multilabmob;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -9,6 +8,7 @@ import com.example.multilabmob.Fragments.MissionFragment;
 import com.example.multilabmob.Fragments.ObjetPredifiniFragment;
 import com.example.multilabmob.Fragments.OrdersFragment;
 import com.example.multilabmob.Fragments.UsersFragment;
+import com.example.multilabmob.Fragments.OrganismeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class AdminPanelActivity extends AppCompatActivity {
@@ -38,7 +38,9 @@ public class AdminPanelActivity extends AppCompatActivity {
             } else if (item.getItemId() == R.id.menu_objet_predifini) {
                 selectedFragment = new ObjetPredifiniFragment();
             } else if (item.getItemId() == R.id.menu_mission) {
-                selectedFragment = new MissionFragment(); // Handle MissionFragment
+                selectedFragment = new MissionFragment();
+            } else if (item.getItemId() == R.id.menu_organisme) {
+                selectedFragment = new OrganismeFragment();
             }
 
             if (selectedFragment != null) {

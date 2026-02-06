@@ -70,9 +70,7 @@ public class UsersFragment extends Fragment {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    userList.clear();
-                    userList.addAll(response.body());
-                    userAdapter.notifyDataSetChanged();
+                    userAdapter.updateList(response.body());
                 } else {
                     Toast.makeText(requireContext(), "Failed to load users", Toast.LENGTH_SHORT).show();
                 }

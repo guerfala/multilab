@@ -15,4 +15,9 @@
         android:id="@+id/menu_mission"
         android:title="Missions"
         android:icon="@drawable/ic_mission" />
+    <item
+        android:id="@+id/menu_organisme"
+        android:icon="@drawable/ic_organisme"
+        android:title="Organisme" />
+
 </menu>

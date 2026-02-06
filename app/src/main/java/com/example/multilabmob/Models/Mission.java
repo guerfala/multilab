@@ -10,7 +10,6 @@ public class Mission implements Serializable {
     private User user;
     private String date;
     private List<Integer> objets; // List of selected ObjetPredifini IDs
-    private String fcmToken;
 
     public <E> Mission(int i, String missionAlpha, Object o, String date, ArrayList<E> es, String s) {
     }
@@ -57,14 +56,6 @@ public class Mission implements Serializable {
 
     public void setObjets(List<Integer> objets) {
         this.objets = objets;
-    }
-
-    public String getFcmToken() {
-        return fcmToken;
-    }
-
-    public void setFcmToken(String fcmToken) {
-        this.fcmToken = fcmToken;
     }
 
     @Override

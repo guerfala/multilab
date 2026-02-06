@@ -40,14 +40,17 @@ public class MissionAdapterUser extends RecyclerView.Adapter<MissionAdapterUser.
         holder.missionNameUser.setText("Mission: " + (mission.getOrganisme() != null ? mission.getOrganisme() : "N/A"));
         holder.missionDateUser.setText("Date: " + (mission.getDate() != null ? mission.getDate() : "N/A"));
 
-        // ✅ Pass essential mission details via Intent
+        // ✅ Extract object IDs correctly from the mission model
+        ArrayList<Integer> objetIds = new ArrayList<>(mission.getObjets()); // Only pass IDs
+
         holder.startMissionButtonUser.setOnClickListener(v -> {
             Intent intent = new Intent(context, AddOrdreActivity.class);
+            intent.putExtra("missionId", mission.getId());
+            intent.putExtra("userId", mission.getUser().getId());
             intent.putExtra("organisme", mission.getOrganisme());
             intent.putExtra("date", mission.getDate());
-            intent.putIntegerArrayListExtra("objets", new ArrayList<>(mission.getObjets()));
-            intent.putExtra("userId", userId);
-            intent.putExtra("missionId", mission.getId());
+            intent.putIntegerArrayListExtra("objets", objetIds); // ✅ Correctly pass object IDs
+
             context.startActivity(intent);
         });
     }
