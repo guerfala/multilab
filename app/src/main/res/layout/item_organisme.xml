@@ -1,6 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="4dp"
+    android:elevation="4dp"
+    app:cardCornerRadius="8dp"
+    app:cardBackgroundColor="@android:color/white">
+
+    <!-- Contenu de l'item (ton LinearLayout avec les TextView et Buttons) -->
+    <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -20,11 +28,15 @@
         android:id="@+id/buttonUpdateOrganisme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Update" />
+        android:text="Update"
+        android:backgroundTint="#DDBA7D" />
 
     <Button
         android:id="@+id/buttonDeleteOrganisme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delete" />
-</LinearLayout>
+        android:text="Delete"
+        android:backgroundTint="#FF0000" />
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

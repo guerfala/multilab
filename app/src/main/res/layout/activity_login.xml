@@ -7,13 +7,12 @@
     android:padding="20dp"
     android:background="#FFFFFF">
 
-    <TextView
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/logoImageView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="MultiLab"
-        android:textColor="#0000FF"
-        android:textSize="35sp"
-        android:gravity="center"
+        android:src="@drawable/multilab_logo1"
+        android:layout_gravity="center"
         android:layout_marginTop="20dp"/>
 
     <TextView
@@ -23,7 +22,7 @@
         android:textColor="#0000FF"
         android:textSize="24sp"
         android:gravity="center"
-        android:layout_marginTop="130dp"
+        android:layout_marginTop="50dp"
         android:layout_gravity="center_horizontal" />
 
     <EditText
@@ -46,7 +45,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Se connecter"
-        android:background="#0000FF"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#3F51B5"
         android:textColor="#FFFFFF" />
 
 </LinearLayout>

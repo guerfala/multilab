@@ -1,11 +1,18 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp"
+    android:elevation="4dp"
+    app:cardCornerRadius="8dp"
+    app:cardBackgroundColor="@android:color/white">
+
+    <!-- Contenu de l'item (ton LinearLayout avec les TextView et Button) -->
+    <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@android:color/white"
-    android:layout_marginBottom="20dp"
-    android:elevation="2dp">
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/textViewOrderTitle"
@@ -49,6 +56,8 @@
         android:layout_height="wrap_content"
         android:text="Settle"
         android:layout_gravity="end"
-        android:backgroundTint="@color/primary"
+        android:backgroundTint="#6CA651"
         android:textColor="@android:color/white" />
-</LinearLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

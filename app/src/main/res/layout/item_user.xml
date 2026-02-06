@@ -1,58 +1,73 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="8dp"
-    android:background="@android:color/white">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp"
+    android:elevation="4dp"
+    app:cardCornerRadius="8dp"
+    app:cardBackgroundColor="@android:color/white">
 
-    <!-- Use 0dp width with weight for proper distribution -->
-    <TextView
-        android:id="@+id/textViewUsername"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+    <!-- Contenu de l'item (ton LinearLayout avec les TextView et Buttons) -->
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal"
+android:padding="8dp">
 
-    <TextView
-        android:id="@+id/textViewRole"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:textSize="14sp" />
+<!-- TextView pour afficher le nom d'utilisateur -->
+<TextView
+    android:id="@+id/textViewUsername"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="3"
+    android:textSize="16sp"
+    android:textStyle="bold" />
 
-    <!-- Stats Button -->
-    <Button
-        android:id="@+id/buttonStats"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minWidth="0dp"
-        android:minHeight="0dp"
-        android:padding="4dp"
-        android:layout_marginRight="3dp"
-        android:text="Stats"
-        android:textSize="15sp" />
+<!-- TextView pour afficher le rôle -->
+<TextView
+    android:id="@+id/textViewRole"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="2"
+    android:textSize="14sp" />
 
-    <!-- Update Button -->
-    <Button
-        android:id="@+id/buttonUpdate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minWidth="0dp"
-        android:minHeight="0dp"
-        android:padding="4dp"
-        android:layout_marginRight="3dp"
-        android:text="Update"
-        android:textSize="15sp"/>
+<!-- Stats Button -->
+<Button
+    android:id="@+id/buttonStats"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="0dp"
+    android:minHeight="0dp"
+    android:padding="4dp"
+    android:layout_marginRight="3dp"
+    android:text="Stats"
+    android:textSize="15sp"
+    android:backgroundTint="@color/primary" />
 
-    <!-- Delete Button -->
-    <Button
-        android:id="@+id/buttonDelete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minWidth="0dp"
-        android:minHeight="0dp"
-        android:padding="4dp"
-        android:text="Delete"
-        android:textSize="15sp" />
+<!-- Update Button -->
+<Button
+    android:id="@+id/buttonUpdate"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="0dp"
+    android:minHeight="0dp"
+    android:padding="4dp"
+    android:layout_marginRight="3dp"
+    android:text="Update"
+    android:textSize="15sp"
+    android:backgroundTint="#DDBA7D" />
+
+<!-- Delete Button -->
+<Button
+    android:id="@+id/buttonDelete"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="0dp"
+    android:minHeight="0dp"
+    android:padding="4dp"
+    android:text="Delete"
+    android:textSize="15sp"
+    android:backgroundTint="#FF0000" />
 </LinearLayout>
+
+    </androidx.cardview.widget.CardView>

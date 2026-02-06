@@ -9,7 +9,8 @@
         android:id="@+id/buttonAddMission"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Mission" />
+        android:text="Add Mission"
+        android:backgroundTint="#4CAF50" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,7 +31,8 @@
             android:id="@+id/buttonPickDateFilter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pick Date" />
+            android:text="Pick Date"
+            android:backgroundTint="#3F51B5" />
     </LinearLayout>
 
     <Spinner
@@ -45,7 +47,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Filter Missions" />
+        android:text="Filter Missions"
+        android:backgroundTint="@color/primary" />
 
     <TextView
         android:id="@+id/textViewKilometrage"

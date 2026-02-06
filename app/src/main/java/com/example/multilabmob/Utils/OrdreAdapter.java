@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.multilabmob.Models.ObjetMission;
 import com.example.multilabmob.Models.Ordre;
 import com.example.multilabmob.R;
 import com.example.multilabmob.SettleOrdreActivity;
@@ -43,6 +44,28 @@ public class OrdreAdapter extends RecyclerView.Adapter<OrdreAdapter.OrderViewHol
         holder.textViewOrderStatus.setText("Status: " + ordre.getStatus());
         holder.textViewOrderDate.setText("Date Debut: " + ordre.getDateDebut());
 
+        // Afficher uniquement le nom des objets de mission
+        if (ordre.getObjetMissions() != null && !ordre.getObjetMissions().isEmpty()) {
+            StringBuilder objets = new StringBuilder("Objets: ");
+            for (ObjetMission objet : ordre.getObjetMissions()) {
+                // Vérifier si l'objet prédéfini existe et afficher son nom
+                if (objet.getObjetPredifini() != null) {
+                    objets.append(objet.getObjetPredifini().getNom()).append(", ");
+                }
+            }
+
+            // Si des objets ont été ajoutés, supprimer la dernière virgule
+            if (objets.length() > 7) {  // "Objets: " fait 7 caractères
+                objets.setLength(objets.length() - 2); // Supprimer la dernière virgule et l'espace
+            } else {
+                objets.append("Aucun objet");
+            }
+
+            holder.textViewOrderObjects.setText(objets.toString());
+        } else {
+            holder.textViewOrderObjects.setText("Objets: Aucun");
+        }
+
         if (ordre.getStatus().equals("REALISE")) {
             holder.buttonSettleOrder.setVisibility(View.GONE);
         } else {
@@ -64,6 +87,7 @@ public class OrdreAdapter extends RecyclerView.Adapter<OrdreAdapter.OrderViewHol
         TextView textViewOrderTitle;
         TextView textViewOrderStatus;
         TextView textViewOrderDate;
+        TextView textViewOrderObjects;
         Button buttonSettleOrder;
 
         public OrderViewHolder(@NonNull View itemView) {
@@ -71,6 +95,7 @@ public class OrdreAdapter extends RecyclerView.Adapter<OrdreAdapter.OrderViewHol
             textViewOrderTitle = itemView.findViewById(R.id.textViewOrderTitle);
             textViewOrderStatus = itemView.findViewById(R.id.textViewOrderStatus);
             textViewOrderDate = itemView.findViewById(R.id.textViewOrderDate);
+            textViewOrderObjects = itemView.findViewById(R.id.textViewOrderObjects);
             buttonSettleOrder = itemView.findViewById(R.id.buttonSettleOrdre);
         }
     }
